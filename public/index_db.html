@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<title>SSG PCWeb</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style type="text/css">
+*,*:before,*:after{box-sizing:border-box}
+body{padding-top:50px}
+h1{margin-bottom:20px;padding-bottom:9px;border-bottom:1px solid #eee}
+.sidebar{position:fixed;top:51px;bottom:0;left:0;z-index:1000;padding:20px;overflow-x:hidden;overflow-y:auto;border-right:1px solid #eee}
+.sidebar{padding:0 10px}
+.sidebar .nav{margin-bottom:20px}
+.sidebar .nav-item{width:100%}
+.sidebar .nav-item + .nav-item{margin-left:0}
+.sidebar .nav-link{border-radius:0}
+.placeholders{padding-bottom:3rem}
+.placeholder img{padding-top:1.5rem;padding-bottom:1.5rem}
+
+#svn_view{position:fixed;z-index:100;top:0;right:0;bottom:0;margin:0;padding:54px 0 0 0;}
+#svn_view iframe{width:100%;height:100%;overflow:auto}
+.sec_h{padding:1em .1em .4em;border-bottom:1px solid #000;font-size:1em;;background-color:#F7F7F7;}
+.sec_h:after{content:'';display:block;clear:both}
+</style>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-light">
+	<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+		<div class="btn-group" role="group">
+			<button class="material-icons" id="btnGroupDrop1" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">view_list</button>
+			<div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+				<a class="dropdown-item" href="#">SSG_PC</a>
+				<a class="dropdown-item" href="#">이마트/트레이더스</a>
+				<a class="dropdown-item" href="#">신몰</a>
+				<a class="dropdown-item" href="#">신백</a>
+				<a class="dropdown-item" href="#">부츠</a>
+				<a class="dropdown-item" href="#">하우디</a>
+				<a class="dropdown-item" href="#">티비쇼핑</a>
+				<a class="dropdown-item" href="#">SIV</a>
+			</div>
+		</div>
+	</div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+	<nav id="nav" class="col-sm-3 col-md-3 hidden-xs-down bg-faded sidebar">
+	
+
+	</nav>
+
+	<main id="svn_view" class="col-sm-9 offset-sm-3 col-md-9 offset-md-2">
+		<iframe src="about:blank" frameborder="0" name="ifr" id="ifr"></iframe>
+	</main>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<!-- TODO 1. firebase SDK 링크 -->
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-messaging.js"></script>
+<script src="/fireinit.js"></script>
+<script type="text/javascript">
+
+function fb_edit(){
+	
+}
+
+
+
+function fb_set(fd,vtitle,vlink,vstate,el) {
+	var postData = {
+		link : $('#'+ vlink).val(),
+		state : $('#'+ vstate).prop('checked'),
+		date : new Date().getTime()
+	}
+;
+	if ($('#'+ vtitle).val() == '' ){
+		alert('타이틀?');
+		$('#'+ vtitle).focus();
+		return false;
+	}else if ($('#'+ vlink).val() == ''){
+		alert('SVN 링크?');
+		$('#'+ vlink).focus();
+		return false;
+	}else{
+		var newPostKey = firebase.database().ref().child('posts').push().key;
+
+		var updates = {}
+;
+		updates['/SSG_PC/'+fd+'/'+ $('#'+ vtitle).val()] = postData;
+		
+		var li_state = '';
+		var li_tag = "";
+
+		if (postData.state == false){
+			li_state = ' class="list-group-item list-group-item-danger"';
+		}else{
+			li_state = ' class="list-group-item"';
+		}
+
+		
+
+		li_tag = '<li'+li_state+'><a class="svn" href="'+postData.link+'" target="ifr">'+ $('#'+ vtitle).val() +'<span>'+postData.link+'</span></a><div class="btn_area"><button class="btn_del" data-key="'+fd+'" data-key1="'+$('#'+ vtitle).val()+'">X</button><button class="btn_edit">O</button></div></li>';
+
+		$(el).parent().parent().prev().prev('ul').append(li_tag);
+		$('#'+ vlink).val('');
+		$('#'+ vtitle).val('').focus();
+		init();
+		return firebase.database().ref().update(updates);
+	}
+}
+
+
+firebase.database().ref('/SSG_PC').on("child_added", function(snapshot) {
+	var h2_tag = '<h2 class="sec_h sticky-top">'+snapshot.key+'</h2>';
+	var div_add = '<div class="add_list form-group">'+
+		'<div class="form-group "><input placeholder="타이틀" id="ip1_'+snapshot.key+'" class="form-control small" /></div>'+
+		'<div class="form-group "><input placeholder="SVN 링크" id="ip2_'+snapshot.key+'" class="form-control" /></div>'+
+		'<div class="form-check"><label class="form-check-label"> <input type="checkbox" class="form-check-input" id="chk1_'+snapshot.key+'" checked="checked">노출</label></div>'+
+		'<div class="form-group "><button type="submit" onclick="fb_set(\''+snapshot.key+'\',\'ip1_'+snapshot.key+'\',\'ip2_'+snapshot.key+'\',\'chk1_'+snapshot.key+'\',this)">추가</button></div>'+
+		'</div>';
+	var li_tag = '';
+	var li_state = '';
+	firebase.database().ref('/SSG_PC/'+snapshot.key).orderByChild("date").on("child_added", function(snapshot1) {
+
+		if (snapshot1.val().state == false){
+			li_state = ' class="list-group-item list-group-item-danger"';
+		}else{
+			li_state = ' class="list-group-item"';
+		}
+
+		li_tag += '<li'+li_state+'><a class="svn" href="'+snapshot1.val().link+'" target="ifr">'+ snapshot1.key +'<span>'+snapshot1.val().link+'</span></a><div class="btn_area"><button class="btn_del" data-key="'+snapshot.key+'" data-key1="'+snapshot1.key+'">X</button><button class="btn_edit">O</button></div></li>';
+	});
+	var ul_tag = '<ul class="list-group small edit_active">'+li_tag+'</ul><button class="add_li">+</button>';
+	$('#nav').append(h2_tag + ul_tag + div_add );
+	init();
+});
+
+
+$('body').on('click','.add_li',function() {
+	$(this).next('.add_list').toggle();
+});
+
+$('body').on('click','.btn_del',function(){
+	var _this = $(this);
+	var _key = _this.data("key");
+	var _key1 = _this.data("key1");
+	var r = confirm('"'+_key + '/' +_key1 +'" 리스트를\n삭제 합니까?');
+	if (r == true) {
+			firebase.database().ref('/SSG_PC/'+_key+'/').child(_key1).remove().then(function() {
+				_this.parent().parent().remove();
+			}).catch(function(error) {
+				alert('error');
+			});
+	}else {
+		return false;
+	}
+
+});
+function init(){
+	$('[data-toggle="tooltip"]').tooltip();
+}
+
+  </script>
+</body>
+</html>

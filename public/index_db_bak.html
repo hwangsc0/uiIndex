@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<title>SSG PCWeb</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<style>
+@charset "utf-8";
+/* Common */
+*{margin:0;padding:0}
+body{font-size:13px;font-family:'나눔고딕',NanumGothic,'맑은 고딕','Malgun Gothic','돋움',Dotum,'굴림',Gulim,Helvetica;line-height:1.25em;color:#000}
+ul{list-style:none}
+a{color:#000;text-decoration:none}
+#wrap{max-width:680px;padding:0 20px 20px}
+#header{position:relative;padding:1em .1em .5em;border-bottom:3px solid #222;text-align:right;zoom:1}
+#header:after{content:'';display:block;clear:both}
+#ct{background-color:#fff}
+.hd_h1{font-size:1.2em;text-align:left}
+.sec_h{padding:2em .1em .4em;border-bottom:1px solid #000;font-size:1em;}
+.sec_h:after{content:'';display:block;clear:both}
+.add_li{width:100%;height:20px;display:block}
+li{position:relative;padding:0 170px 0 6px;border-bottom:1px solid #dfdfdf;*zoom:1}
+li:after{content:'';display:block;clear:both}
+li:nth-child(even){background-color:#f4f4f4}
+li:hover{background-color:#eaeaea}
+li a{display:inline-block;padding:7px 0 8px;font-size:1em}
+li span{margin-left:.4em;font-size:.7em;color:#909090}
+li a.lnk{position:absolute;right:0;top:0}
+li a.lnk:before{content:'';display:inline-block;width:1px;height:14px;margin-right:10px;background:#BCBCBC;vertical-align:middle}
+li a.lnk span{display:inline-block;width:120px;vertical-align:middle;overflow:hidden;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+li.on a.svn:after{display:block;height:5px;margin-top:-5px;background:rgba(252,210,12,.4);content:''}
+.add_list{padding:5px;border-bottom:1px solid #0266AB;background-color:#93B4EE;display:none}
+.add_list:after{content:'';display:block;clear:both}
+.add_list > input{height:20px;vertical-align:middle;float:left;width:180px;margin-right:5px}
+.add_list > select{height:24px;vertical-align:middle;float:left;width:50px}
+.add_list > button{height:24px;vertical-align:middle;float:right}
+ul.edit_active li > div{position:absolute;top:0;right:0}
+
+/* add-on */
+.service_link{float:right;margin-top:-17px;font-size:11px}
+.service_link a:hover{text-decoration:underline}
+li.needcheck{background-color:#ffb3b3} /* 사용여부 확인필요한 페이지 */
+#svn_view{position:fixed;z-index:100;left:720px;top:10px;right:10px;bottom:10px;margin-left:10px;border:1px solid #cacaca}
+#svn_view iframe{width:100%;height:100%;overflow:auto}
+.skip_nav{position:fixed;left:705px;top:107px;bottom:4px;text-align:center}
+.skip_nav .skip_nav_pager{overflow-y:auto;overflow-x:hidden;position:absolute;top:0;right:23px;bottom:4px;padding:2px;text-align:right}
+.skip_nav .skip_nav_pager button{display:block;width:100%;vertical-align:top;border:0 none;background:none;cursor:pointer;text-align:right;font-size:11px;letter-spacing:-1px}
+.skip_nav .skip_nav_pager button span{display:inline-block;vertical-align:top;white-space:nowrap;padding:0 5px 2px;border-radius:8px;background-color:rgba(34,34,34,.2)}
+.skip_nav .skip_nav_pager button.on span{background-color:rgba(34,34,34,.8);color:#fff}
+.skip_nav .skip_nav_pager button + button{margin-top:2px}
+.skip_nav ul{width:20px;border-radius:10px;overflow:hidden}
+.skip_nav li{padding:0;width:100%;background:none}
+.skip_nav li:first-child{margin-bottom:2px}
+.skip_nav li a{display:block;height:100px;padding:0;line-height:100px;background-color:#eaeaea}
+.skip_nav li a:hover{background-color:#dfdfdf}
+.skip_nav .skip_nav_opener{display:inline-block;width:20px;margin-top:4px;padding:2px 0;border-radius:10px;background-color:#eaeaea;text-align:center;font-size:10px}
+</style>
+</head>
+<body>
+<div id="wrap">
+	<div id="header">
+		<h1 class="hd_h1">SSG PCWeb</h1>
+		<span class="service_link">
+			<strong>SSG PC |</strong> <!-- <a target="_blank" href="http://svn.ssgadm.com/ssgui/01.ssg/pcweb/trunk/@index.html">SSG PC |</a> -->
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/01.ssg/mobile/trunk/html/@index.html">SSG M |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/02.emart/pcweb/trunk/@index.html">EM(T/B) PC |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/02.emart/mobile/trunk/@index.html">EM(T/B) M |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/03.shinsegae/pcweb/sm_pcweb/trunk/@index.html">SM PC |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/03.shinsegae/pcweb/sd_pcweb/trunk/@index.html">SD PC |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/03.shinsegae/mobile/trunk/@index.html">SM/SD M</a><br>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/04.howdy/pcweb/trunk/@index.html">Howdy PC |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/04.howdy/mobile/trunk/@index.html">Howdy M |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/05.boots/pcweb/trunk/@index.html">Boots PC |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/05.boots/mobile/trunk/@index.html">Boots M |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/02.emart/pcweb/trunk/tv/@index.html">TV쇼핑 PC |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/02.emart/mobile/trunk/html/tv/@index.html">TV쇼핑 M |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/06.siv/pcweb/trunk/@index.html">SIV PC |</a>
+			<a target="_blank" href="http://svn.ssgadm.com/ssgui/06.siv/mobile/trunk/@index.html">SIV M</a>
+		</span>
+		<br />
+		<button id="c1">링크생성</button>
+		<button id="c2">수정</button>
+	</div>
+	<div id="nav">
+	
+	</div>
+	<div id="ct">
+		<!-- <h2 class="sec_h">공통 레이아웃</h2>
+		<ul>
+			<li><a class="svn" href="guide_common_unit.html" target="_blank">공통 상품유닛</a></li>
+			<li><a class="svn" href="common/CM-common-A-001-01.html" target="_blank">GNB/스카이/푸터</a></li>
+			<li><a class="svn" href="common/CM-common-A-001-01_02.html" target="_blank">각 몰용 GNB</a></li>
+			<li><a class="svn" href="common/CM-common-A-001-02-AU.html" target="_blank">카테고리 네비게이션</a></li>
+			<li><a class="svn" href="common/CM-common-A-001-03.html" target="_blank">로케이션</a></li>
+		</ul>
+		
+		<h2 class="sec_h">메인</h2>
+		<ul>
+			<li><a class="svn" href="main/SG-display-A-001-01.html" target="_blank">메인</a> <a class="lnk" href="http://www.ssg.com" target="_blank">운영</a></li>
+		</ul> -->
+		
+		<h2 class="sec_h">상품상세</h2>
+		<ul>
+			<li><a class="svn" href="product/SG-product-A-001-01_renew.html" target="_blank">상품상세(renew)(SSG/이/트/분 소스동일)</a></li>
+			<li><a class="svn" href="product/SG-product-A-001-01_hotdeal.html" target="_blank">상품상세(핫딜)</a></li>
+			<li><a class="svn" href="product/SG-product-A-003-03.html" target="_blank">상품평신고하기팝업</a></li>
+			<li><a class="svn" href="product/SG-product-A-003-04.html" target="_blank">상품평이미지확대보기</a></li>
+			<li><a class="svn" href="product/SG-product-A-003-05.html" target="_blank">상품평 동영상보기</a></li>
+			<!-- <li><a class="svn" href="product/SG-product-A-004-02.html" target="_blank">상품 Q&amp;A</a></li>
+			<li><a class="svn" href="product/SG-product-A-004-02_hotdeal.html" target="_blank">상품 Q&amp;A(핫딜)</a></li> -->
+			<li><a class="svn" href="product/SG-product-A-010-01.html" target="_blank">업체상품 리스트</a></li>
+			<li><a class="svn" href="product/SG-product-A-011-02.html" target="_blank">픽업가능 시간확인</a></li>
+			<li><a class="svn" href="product/SG-product-A-012-01.html" target="_blank">재고현황</a></li>
+			<li><a class="svn" href="product/SG-product-A-013-01.html" target="_blank">상품크게보기</a></li>
+			<li><a class="svn" href="product/SG-product-A-002-01.html" target="_blank">간편보기</a></li>
+			<li><a class="svn" href="popup/SG-product-A-014-01.html" target="_blank">제휴사팝업</a></li>
+			<li class="needcheck"><a class="svn" href="product/SG-product-A-008-01_bak.html" target="_blank">오류사항 신고하기</a></li>
+			<li class="needcheck"><a class="svn" href="product/SG-product-A-001-01.html" target="_blank">상품상세</a></li>
+		</ul>
+		
+		<h2 class="sec_h">카테고리</h2>
+		<ul>
+			<li><a class="svn" href="display/SG-display-A-002-01.html" target="_blank">대카테고리</a></li>
+			<li><a class="svn" href="display/SG-display-A-003-01.html" target="_blank">중카테고리</a></li>
+			<li><a class="svn" href="display/SG-display-A-004-01.html" target="_blank">소카테고리(이미지형)</a></li>
+			<li><a class="svn" href="display/SG-display-A-004-02.html" target="_blank">소카테고리(리스트형)</a></li>
+			<li><a class="svn" href="display/SG-display-A-007-02.html" target="_blank">브랜드 카테고리</a></li>
+			<li><a class="svn" href="display/SSG_cf_deal.html" target="_blank">쓱딜 이미지/html 코너</a></li>
+		</ul>
+		
+		<h2 class="sec_h">카테고리 - 검색</h2>
+		<ul>
+			<li><a class="svn" href="display/CM-display-A-008-05_renew.html" target="_blank">검색결과</a></li>
+			<li><a class="svn" href="display/CM-display-A-008-05_no_renew.html" target="_blank">검색결과 없음</a></li>
+		</ul>
+		
+		<h2 class="sec_h">카테고리 - 특화서비스</h2>
+		<ul>
+			<li><a class="svn" href="best/SG-service-A-002-01.html" target="_blank">베스트</a></li>
+			<li><a class="svn" href="service/SG-service-A-004-01.html" target="_blank">오반장</a> <a href="http://www.ssg.com/service/specialMain.ssg?tabDivCd=obanjang" class="lnk" target="_blank">운영</a></li>
+			<li><a class="svn" href="service/SG-service-A-004-02.html" target="_blank">해피바이러스</a> <a href="http://www.ssg.com/service/specialMain.ssg?tabDivCd=happy" class="lnk" target="_blank">운영</a></li>
+			<li><a class="svn" href="service/SG-service-A-004-03.html" target="_blank">하나 더 &amp; 사은품</a> <a href="http://www.ssg.com/service/specialMain.ssg?tabDivCd=nplusone" class="lnk" target="_blank">운영</a></li>
+		</ul>
+		
+		<h2 class="sec_h">MYSSG</h2>
+		<ul>
+			<li><a class="svn" href="myssg/CM-member-A-015-01.html" target="_blank">메인</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-02.html" target="_blank">배송현황 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-04.html" target="_blank">신세계포인트 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-05.html" target="_blank">S-머니 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-06.html" target="_blank">S-포켓 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-07.html" target="_blank">쿠폰 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-08.html" target="_blank">상품평 작성하기 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-09.html" target="_blank">나의 쇼핑알림 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-10.html" target="_blank">Please Comment 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-11.html" target="_blank">MY CLIP 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-13.html" target="_blank">최근 본 상품 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-14.html" target="_blank">최근 본 기획전 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-15.html" target="_blank">나의 맞춤 혜택 보기 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-17.html" target="_blank">자주 구매하는 상품 TOP8 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-18.html" target="_blank">정기배송 팝업</a></li>
+			<li><a class="svn" href="layer/CM-member-A-015-03.html" target="_blank">취소/교환/반품 현황 팝업</a></li>
+			<li><a class="svn" href="popup/SG-member-A-026-02.html" target="_blank">상품평 작성 팝업</a></li>
+		</ul>
+
+		<h2 class="sec_h">MYSSG > My주문관리</h2>
+		<ul>
+			<li><a class="svn" href="order/CM-order-A-006-01.html" target="_blank">주문/배송 조회</a></li>
+			<li><a class="svn" href="order/CM-order-A-006-02.html" target="_blank">주문/배송 조회 - 주문상세 조회</a></li>
+			<li><a class="svn" href="order/CM-order-A-006-21.html" target="_blank">주문/배송 조회 - 취소신청</a></li>
+			<li><a class="svn" href="order/CM-order-A-006-21_1.html" target="_blank">주문/배송 조회 - 취소신청 1단계</a></li>
+			<li><a class="svn" href="order/CM-order-A-006-20.html" target="_blank">주문/배송 조회 - 교환신청</a></li>
+			<li><a class="svn" href="order/CM-order-A-006-20_1.html" target="_blank">주문/배송 조회 - 교환신청 1단계</a></li>
+			<li><a class="svn" href="order/CM-order-A-006-20_2.html" target="_blank">주문/배송 조회 - 교환신청 2단계</a></li>
+			<li><a class="svn" href="order/CM-order-A-006-19.html" target="_blank">주문/배송 조회 - 반품신청</a></li>
+			<li><a class="svn" href="order/CM-order-A-006-19_1.html" target="_blank">주문/배송 조회 - 반품신청 1단계</a></li>
+			<li><a class="svn" href="order/CM-order-A-006-19_2.html" target="_blank">주문/배송 조회 - 반품신청 2단계</a></li>
+			<li class="needcheck"> <a class="svn" href="order/CM-order-A-006-22.html" target="_blank">주문/배송 조회 - 취소/교환/반품 신청</a></li>
+			<li><a class="svn" href="order/CM-order-A-007-01.html" target="_blank">취소/교환/반품 조회</a></li>
+			<li><a class="svn" href="order/CM-order-A-007-02_3.html" target="_blank">취소/교환/반품 조회 - 취소 상세</a></li>
+			<li><a class="svn" href="order/CM-order-A-007-02.html" target="_blank">취소/교환/반품 조회 - 교환 상세</a></li>
+			<li><a class="svn" href="order/CM-order-A-007-02_2.html" target="_blank">취소/교환/반품 조회 - 반품 상세</a></li>
+			<li class="needcheck"><a class="svn" href="order/CM-order-A-008-01.html" target="_blank">여행상품예약조회</a></li>
+			<li class="needcheck"><a class="svn" href="order/CM-order-A-009-01.html" target="_blank">영수증발급</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-11.html" target="_blank">쓱-배송 일자/시간 변경 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-006-04.html" target="_blank">택배상품 배송조회 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-006-06.html" target="_blank">결제수단 변경 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-006-07.html" target="_blank">무통장입금 계좌변경 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-006-08.html" target="_blank">배송비 추가 결제(신용카드) 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-006-08_02.html" target="_blank">배송비 추가 결제(실시간계좌이체) 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-006-09.html" target="_blank">배송지변경 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-006-11.html" target="_blank">SMS재발송 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-006-12.html" target="_blank">희망 배송일 변경 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-006-31.html" target="_blank">배송비 상세 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-009-02.html" target="_blank">영수증 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-009-03.html" target="_blank">카드매출 온라인전표 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-009-04.html" target="_blank">현금영수증 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-009-05.html" target="_blank">현금영수증 아이프레임 빈페이지 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-009-06.html" target="_blank">거래명세서 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-006-03.html" target="_blank">전체 취소 팝업</a></li>
+			<li><a class="svn" href="popup/popup_detail_duty.html" target="_blank">관부가세 내역 팝업</a></li>
+			<li><a class="svn" href="popup/popup_ssg_cause_upload.html" target="_blank">반품교환사유 사진등록 팝업</a></li>
+			<li><a class="svn" href="popup/popup_delivery_change.html" target="_blank">배송방법 변경하기 이용안내 팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-006-05.html" target="_blank">옵션변경 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-006-14.html" target="_blank">총할인/혜택 내역 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-006-15.html" target="_blank">주문취소로 인한 할인내역 상세 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-006-15_02.html" target="_blank">주문반품으로 인한 할인내역 상세 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-006-16.html" target="_blank">취소신청 불가 상품 안내 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-006-17.html" target="_blank">교환신청 불가 상품 안내 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-006-18.html" target="_blank">반품신청 불가 상품 안내 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-006-28.html" target="_blank">확정계좌 안내 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-007-03.html" target="_blank">반송장입력 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-007-03_02.html" target="_blank">반송장수정 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-007-04_02.html" target="_blank">교환 철회 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-007-04.html" target="_blank">반품 철회 레이어팝업</a></li>
+		</ul>
+
+		<h2 class="sec_h">MYSSG > 쇼핑통장관리</h2>
+		<ul>
+			<li><a class="svn" href="myssg/CM-member-A-016-01.html" target="_blank">쿠폰 - 보유쿠폰</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-016-02.html" target="_blank">쿠폰 - 선물한 쿠폰</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-017-01.html" target="_blank">S-머니 - 적립/사용 내역</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-017-02.html" target="_blank">S-머니 - 소멸예정 S-머니 조회</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-018-01.html" target="_blank">S-포켓 - S-포켓(전체)</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-018-02.html" target="_blank">S-포켓 - 예치금</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-018-03.html" target="_blank">S-포켓 - 상품권전환금</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-018-04.html" target="_blank">S-포켓 - 지원금</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-020-01.html" target="_blank">신세계포인트 - 신세계포인트 상세조회</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-020-04.html" target="_blank">신세계포인트 - 특별적립(다운받기)</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-020-02.html" target="_blank">신세계포인트 - 나의 신세계 포인트카드</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-019-02.html" target="_blank">상품권 전환금 신청/조회 - 상품권 전환금 신청</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-019-05.html" target="_blank">상품권 전환금 신청/조회 - 상품권 전환금 처리현황</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-024-01.html" target="_blank">임직원할인</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-016-03.html" target="_blank">쿠폰검색 팝업</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-016-05.html" target="_blank">전체 쿠폰 다운로드 팝업</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-019-06.html" target="_blank">신세계상품권 전환금 확인증 팝업</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-019-06-01.html" target="_blank">신세계포인트 전환금 확인증 팝업</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-019-06-02.html" target="_blank">신세계포인트 전환금 접수증 팝업</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-020-03.html" target="_blank">사용 가능한 포인트 팝업</a></li>
+		</ul>
+
+		<h2 class="sec_h">MYSSG > My상품관리</h2>
+		<ul>
+			<li><a class="svn" href="myssg/CM-member-A-025-01.html" target="_blank">자주구매상품</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-025-02.html" target="_blank">구매내역</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-025-03.html" target="_blank">구매내역 - 구매내역 자세히보기</a></li>
+			<li><a class="svn" href="layer/CM-member-A-025-04.html" target="_blank">추천상품보기 레이어팝업</a></li>
+			<li><a class="svn" href="cs/CM-member-A-044-01.html" target="_blank">정기배송 설정 관리 - 미이용</a></li>
+			<li><a class="svn" href="cs/CM-member-A-044-02.html" target="_blank">정기배송 설정 관리 - 스케쥴 관리</a></li>
+			<li><a class="svn" href="cs/CM-member-A-044-03.html" target="_blank">정기배송 설정 관리 - 정기배송일 관리</a></li>
+			<li><a class="svn" href="cs/CM-member-A-044-04.html" target="_blank">정기배송 설정 관리 - 주문결제정보관리</a></li>
+		</ul>
+
+		<h2 class="sec_h">MYSSG > My활동관리</h2>
+		<ul>
+			<li><a class="svn" href="cs/CM-member-A-026-01.html" target="_blank">내 상품평</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-026-01.html" target="_blank">스탬프 내역</a></li>
+			<li><a class="svn" href="cs/CM-member-A-027-01.html" target="_blank">이벤트 참여현황</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-003-01-myssg.html" target="_blank">1:1 답변확인 - 나의 문의내역</a></li>
+			<li><a class="svn" href="cs/CM-c03-03s-A-0.html" target="_blank">1:1 답변확인 - 나의 문의내역(댓글)</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-cs-A-003-02-myssg.html" target="_blank">1:1 답변확인 - 이메일 상담</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-cs-A-003-05-myssg.html" target="_blank">1:1 답변확인 - 이메일 상담(추천)</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-045-01.html" target="_blank">상품 Q&amp;A - 목록</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-045-02.html" target="_blank">상품 Q&amp;A - 보기</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-member-A-029-01.html" target="_blank">배송메시지</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-member-A-030-01.html" target="_blank">쇼핑알림 - 목록</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-member-A-030-02.html" target="_blank">쇼핑알림 - 보기</a></li>
+		</ul>
+
+		<h2 class="sec_h">MYSSG > My정보관리</h2>
+		<ul>
+			<li><a class="svn" href="cs/CM-member-A-008-02.html" target="_blank">개인정보 수정</a></li>
+			<li><a class="svn" href="cs/CM-member-A-008-03.html" target="_blank">개인정보 수정(통합회원)</a></li>
+			<li><a class="svn" href="cs/CM-member-A-008-04.html" target="_blank">개인정보 수정(법인회원)</a></li>
+			<li><a class="svn" href="cs/CM-member-A-008-05.html" target="_blank">개인정보 수정(외국인)</a></li>
+			<li><a class="svn" href="cs/CM-member-A-008-06.html" target="_blank">개인정보 수정(이메일간편가입)</a></li>
+			<li><a class="svn" href="cs/CM-member-A-008-07.html" target="_blank">개인정보 수정(페이스북간편가입)</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-member-A-008-09.html" target="_blank">개인정보 수정(SFC)</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-member-A-008-10.html" target="_blank">개인정보 수정(SFC)</a></li>
+			<li><a class="svn" href="myssg/CM-member-A-027-01.html" target="_blank">이메일/SMS 수신관리</a></li>
+			<li><a class="svn" href="cs/CM-member-A-011-01.html" target="_blank">개인정보 제 3자 제공 및 활용동의 철회</a></li>
+			<li><a class="svn" href="cs/CM-member-A-008-08.html" target="_blank">SNS 연결 설정</a></li>
+			<li><a class="svn" href="cs/CM-member-A-009-00.html" target="_blank">비밀번호 변경 - 본인인증</a></li>
+			<li><a class="svn" href="cs/CM-member-A-009-01.html" target="_blank">비밀번호 변경</a></li>
+			<li><a class="svn" href="cs/CM-member-A-010-04.html" target="_blank">배송지/환불계좌관리</a></li>
+			<li><a class="svn" href="cs/CM-member-A-014-01.html" target="_blank">회원탈퇴</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-member-A-013-01.html" target="_blank">사이트이용설정</a></li>
+			<li><a class="svn" href="cs/CM-member-A-012-01.html" target="_blank">포인트회원전환 레이어팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-010-06.html" target="_blank">환불계좌 관리하기 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-010-07.html" target="_blank">배송지 일괄등록 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-011-02.html" target="_blank">개인정보활동동의철회 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-014-02.html" target="_blank">회원탈퇴 팝업</a></li>
+		</ul>
+		
+		<h2 class="sec_h">장바구니 / 배송</h2>
+		<ul>
+			<li><a class="svn" href="order/CM-order-A-001-01.html" target="_blank">메인</a></li>
+			<li><a class="svn" href="order/CM-order-A-001-01_tooltip.html" target="_blank">툴팁모음</a></li>
+			<li><a class="svn" href="order/CM-order-A-001-01_tooltip2.html" target="_blank">툴팁모음2</a></li>
+			<li><a class="svn" href="order/CM-order-A-001-02.html" target="_blank">다중배송장바구니</a></li>
+			<li><a class="svn" href="order/CM-order-A-002-01.html" target="_blank">배송정보</a></li>
+			<li><a class="svn" href="order/CM-order-A-003-01.html" target="_blank">결제하기</a></li>
+			<li><a class="svn" href="order/CM-order-A-005-01.html" target="_blank">주문완료</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-01.html" target="_blank">휴대폰번호 인증 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-001-01_04.html" target="_blank">희망배송일변경 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-001-03.html" target="_blank">다중배송 주소지 불러오기 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-001-18.html" target="_blank">국내 배송지 설정 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-001-19.html" target="_blank">할인 적용 카드 불일치 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-001-19_02.html" target="_blank">할인 적용 상품 불일치 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-001-20.html" target="_blank">국내 배송지 추가 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-001-21.html" target="_blank">국내 배송지 수정 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-06.html" target="_blank">전자금융거래 이용약관 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-07.html" target="_blank">고유식별정보 수집 및 이용안내 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-08.html" target="_blank">개인정보 수집 및 이용안내 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-09.html" target="_blank">개인정보 수집 및 위탁안내 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-10.html" target="_blank">신세계포인트 사용 조회하기 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-11.html" target="_blank">신세계 기프트 카드(조회) 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-12.html" target="_blank">신세계 기프트 카드(전환) 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-13.html" target="_blank">신세계 모바일 상품권(조회) 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-13_02.html" target="_blank">신세계 모바일 상품권(전환) 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-003-27.html" target="_blank">현금영수증 신청 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-004-02.html" target="_blank">해외 배송지 설정 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-004-06.html" target="_blank">해외배송 가능지역 및 해외배송비 안내(해외배송 가능지역) 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-004-07.html" target="_blank">해외배송 가능지역 및 해외배송비 안내(해외배송비) 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-004-08.html" target="_blank">해외 배송비 상세 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-004-09.html" target="_blank">해외 배송지 수정 팝업</a></li>
+			<li><a class="svn" href="popup/popup_magic_pickup.html" target="_blank">매직픽업 조회 팝업</a></li>
+			<li><a class="svn" href="popup/popup_ssgssac.html" target="_blank">주문완료 팝업(쓱싹e몰)</a></li>
+			<li><a class="svn" href="popup/popup_cheerup.html" target="_blank">주문완료 팝업(치어럽)</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-05.html" target="_blank">장바구니 추가할인/ 행사내역 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-05_02.html" target="_blank">상품별할인내역 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-06.html" target="_blank">예약배송 상품보기 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-06_02.html" target="_blank">택배배송 상품보기 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-06_03.html" target="_blank">냉장(냉동) 배송 상품보기 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-07.html" target="_blank">냉장(냉동) 점포배송 상품보기 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-07_02.html" target="_blank">냉장(냉동) 택배배송 상품보기 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-08.html" target="_blank">배송방법 설정 및 배송비안내 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-09_01.html" target="_blank">상품결제 및 배송 유의사항 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-09_02.html" target="_blank">상품결제 및 배송 유의사항 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-14.html" target="_blank">이미지 크게보기 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-001-16_03.html" target="_blank">에누리 묶음 상품 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-002-05.html" target="_blank">대체상품여부 개별 선택 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-08.html" target="_blank">할인 내역 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-09.html" target="_blank">혜택(적립/증정) 내역 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-14.html" target="_blank">임직원 할인 상세내역 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-16.html" target="_blank">신세계 상품권 안내 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-17.html" target="_blank">신세계포인트 활용 TIP 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-19.html" target="_blank">간편결제 서비스 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-29.html" target="_blank">안심번호서비스 안내 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-30.html" target="_blank">실시간계좌이체 안내 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-31.html" target="_blank">실시간계좌이체 은행별 이용시간 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-32.html" target="_blank">무통장 입금 안내 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-34.html" target="_blank">신용카드 사용 안내 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-36.html" target="_blank">에코머니 활용 TIP 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-003-37.html" target="_blank">할인/적립혜택 사용 레이어팝업</a></li>
+			<li><a class="svn" href="layer/CM-order-A-004-04.html" target="_blank">상품결제 및 배송 유의사항 레이어팝업</a></li>
+			<li><a class="svn" href="order/CM-order-A-011-01.html" target="_blank">정기배송 - 배송정보 설정</a></li>
+			<li><a class="svn" href="order/CM-order-A-011-02.html" target="_blank">정기배송 - 정기배송일 설정</a></li>
+			<li><a class="svn" href="order/CM-order-A-011-03.html" target="_blank">정기배송 - 자동결제 설정</a></li>
+			<li><a class="svn" href="order/CM-order-A-011-05.html" target="_blank">정기배송 - 메인</a></li>
+			<li><a class="svn" href="popup/CM-order-A-011-04.html" target="_blank">정기배송 - 정기배송 설정 완료 팝업</a></li>
+			<li><a class="svn" href="popup/CM-order-A-011-09.html" target="_blank">정기배송 - 정기배송 스케줄 관리 팝업</a></li>
+		</ul>
+		
+		<h2 class="sec_h">MY클립</h2>
+		<ul>
+			<li><a class="svn" href="service/clip3_my1.html" target="_blank">상품</a></li>
+			<li><a class="svn" href="service/clip3_my2.html" target="_blank">브랜드</a></li>
+			<li><a class="svn" href="service/clip3_my3.html" target="_blank">카테고리</a></li>
+			<li><a class="svn" href="service/clip3_my4.html" target="_blank">컨텐츠</a></li>
+			<li><a class="svn" href="common/CM-common-A-016-01gnb.html" target="_blank">클립추천 레이어</a></li>
+			<li><a class="svn" href="common/CM-common-A-016-03gnb.html" target="_blank">클립 바로가기 레이어</a></li>
+			<li><a class="svn" href="service/SG-service-A-006-01_04.html" target="_blank">위시/단골클립 레이어</a></li>
+		</ul>
+		
+		<h2 class="sec_h">선물서비스</h2>
+		<ul>
+			<li><a class="svn" href="gift/gift_receive_list.html" target="_blank">선물조르기(옵션정보)</a></li>
+			<li><a class="svn" href="gift/gift_send_list.html" target="_blank">선물하기</a></li>
+			<li><a class="svn" href="gift/gift_message.html" target="_blank">선물 사주세요</a></li>
+			<li><a class="svn" href="gift/gift_box_history.html" target="_blank">선물함 - 선물 히스토리</a></li>
+			<li><a class="svn" href="gift/gift_box_receive.html" target="_blank">선물함 - 받은선물</a></li>
+			<li><a class="svn" href="gift/gift_box_send.html" target="_blank">선물함 - 보낸선물</a></li>
+			<li><a class="svn" href="gift/gift_common_clip.html" target="_blank">클립상품 추가하기</a></li>
+			<li><a class="svn" href="ems/CM_mail_gift.html" target="_blank">이메일수신</a></li>
+			<li><a class="svn" href="gift/gift_receive_smoney.html" target="_blank">S-머니 선물받기</a></li>
+		</ul>
+		
+		<h2 class="sec_h">기획전</h2>
+		<ul>
+			<li><a class="svn" href="service/SG-service-A-001-01.html" target="_blank">메인</a> <a href="http://www.ssg.com/plan/shoppingPlanShop.ssg" class="lnk" target="_blank">운영</a></li>
+			<li><a class="svn" href="service/plan_detail_today.html" target="_blank">이몰 오늘만ON특가 템플릿</a></li>
+		</ul>
+		
+		<h2 class="sec_h">기획전 - 특화서비스</h2>
+		<ul>
+			<li><a class="svn" href="service/SG-service-A-001-02.html" target="_blank">라이벌전</a></li>
+			<li><a class="svn" href="service/SG-service-A-026-01.html" target="_blank">매장습격</a></li>
+			<li><a class="svn" href="service/SG-service-A-026-02.html" target="_blank">잇아이템</a></li>
+			<li><a class="svn" href="service/SG-service-A-026-03.html" target="_blank">스타브랜드</a></li>
+			<li><a class="svn" href="service/SG-service-A-026-03.html" target="_blank">생활의발명</a></li>
+		</ul>
+		
+		<h2 class="sec_h">라이프매거진</h2>
+		<ul>
+			<li><a class="svn" href="service/SG-service-A-025-01.html" target="_blank">메인(old)</a></li>
+			<li><a class="svn" href="service/SG-service-A-025-02.html" target="_blank">상세(old)</a></li>
+			<li><a class="svn" href="service/SG-service-Life-01.html" target="_blank">메인</a></li>
+			<li><a class="svn" href="service/SG-service-Life-02.html" target="_blank">상세</a></li>
+		</ul>
+		
+		<h2 class="sec_h">이벤트&amp;쿠폰</h2>
+		<ul>
+			<li><a class="svn" href="event/SG-marketing-A-001-01.html" target="_blank">메인</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-003-01.html" target="_blank">템플릿</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-003-01P.html" target="_blank">템플릿 - 투표 결과보기 팝업</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-002-01.html" target="_blank">모든 이벤트</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-004-01.html" target="_blank">당첨자 발표 - 목록</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-004-pop.html" target="_blank">당첨자 발표 - 목록(공지사항 레이어팝업)</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-004-02.html" target="_blank">당첨자 발표 - 보기</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-01.html" target="_blank">쿠폰존 - 쿠폰북</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-02.html" target="_blank">쿠폰존 - 등급별 혜택</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-03.html" target="_blank">쿠폰존 - 생일쿠폰 상세</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-04.html" target="_blank">쿠폰존 - 첫구매쿠폰 상세</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-05.html" target="_blank">개인화 매장</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-05_em.html" target="_blank">개인화 매장(이몰)</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-05_sm.html" target="_blank">개인화 매장(신몰)</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-06.html" target="_blank">쿠폰존 - 쿠폰 선물하기 상세</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-07.html" target="_blank">선물 받으신 쿠폰</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-08_layer.html" target="_blank">선물 쿠폰 등록 완료 레이어팝업</a></li>
+			<li><a class="svn" href="event/SG-marketing-A-005-09_layer.html" target="_blank">쿠폰 선물하기 레이어팝업</a></li>
+			<li class="needcheck"><a class="svn" href="event/SG-marketing-A-005-02-01.html" target="_blank">쿠폰존 - 스탬프 플레이존</a></li>
+			<li class="needcheck"><a class="svn" href="event/SG-marketing-A-005-02-02.html" target="_blank">쿠폰존 - 스탬프 플레이존</a></li>
+			<li class="needcheck"><a class="svn" href="event/SG-marketing-A-005-02-03.html" target="_blank">쿠폰존 - 스탬프 플레이존 팝업</a></li>
+			<li><a class="svn" href="event/coupon_guide.html" target="_blank">전체 쿠폰 모음</a></li>
+		</ul>
+		
+		<h2 class="sec_h">전문관 - 템플릿</h2>
+		<ul>
+			<li><a class="svn" href="special_tmpl/special_main.html" target="_blank">메인</a></li>
+			<li><a class="svn" href="special_tmpl/special_sub.html" target="_blank">서브</a></li>
+		</ul>
+		
+		<h2 class="sec_h">전문관 - 하남스타필드</h2>
+		<ul>
+			<li><a class="svn" href="special/hanam_main.html" target="_blank">하남 메인</a></li>
+			<li><a class="svn" href="special/hanam_sub.html" target="_blank">하남 서브</a></li>
+			<li><a class="svn" href="special/hanam_seasonal.html" target="_blank">하남 시즌테마</a></li>
+			<li><a class="svn" href="special/hanam_sesonal_detail.html" target="_blank">하남 시즌테마 상세</a></li>
+			<li><a class="svn" href="special/hanam_superchoice.html" target="_blank">하남 슈퍼초이스</a></li>
+			<li><a class="svn" href="special/hanam_info.html" target="_blank">하남 인포</a></li>
+		</ul>
+		
+		<h2 class="sec_h">공통</h2>
+		<ul>
+			<li><a class="svn" href="common/popup_adsystem.html" target="_blank">푸터 광고안내 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-018-02.html" target="_blank">우편번호 찾기 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-018-04_01.html" target="_blank">우편번호 찾기 - 상세주소 입력 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-018-04_02.html" target="_blank">쓱-배송 가능지역 확인</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-04.html" target="_blank">예약배송시간 확인 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-01.html" target="_blank">국내 배송지 설정 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-02.html" target="_blank">배송지 추가 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-03.html" target="_blank">배송지 수정 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-09.html" target="_blank">배송지 등록(기본/이번만) 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-05.html" target="_blank">해외 배송지 설정 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-06.html" target="_blank">해외 배송지 추가 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-07.html" target="_blank">해외 배송지 추가2 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-08.html" target="_blank">정기 배송지 설정 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-010-10.html" target="_blank">상품 수령 확인 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-099-01.html" target="_blank">예약배송 점포변경 안내 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-099-02.html" target="_blank">예약배송 배송조회 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-019-01.html" target="_blank">쿠폰 다운로드 팝업</a></li>
+			<li><a class="svn" href="common/CM-common-A-003-02.html" target="_blank">이용약관</a> <a class="lnk" href="https://member.ssg.com/policies/terms.ssg" target="_blank">운영</a></li>
+			<li><a class="svn" href="common/CM-common-A-003-03.html" target="_blank">개인정보취급(처리)방침 / 청소년 보호방침</a> <a class="lnk" href="https://member.ssg.com/policies/privacy.ssg" target="_blank">운영</a></li>
+			<li><a class="svn" href="common/CM-common-A-003-04.html" target="_blank">이전약관보기 팝업</a></li>
+			<li><a class="svn" href="common/ifr_agree/" target="_blank">이용약관 iframe</a></li>
+			<li><a class="svn" href="common/ifr_private/" target="_blank">개인정보취급(처리)방침 iframe</a></li>
+			<li><a class="svn" href="common/error_404.html" target="_blank">오류페이지 - 요청페이지 없음</a></li>
+			<li><a class="svn" href="common/error_500.html" target="_blank">오류페이지 - 일시적 오류</a></li>
+			<li><a class="svn" href="common/error_503.html" target="_blank">오류페이지 - 방문자 폭주</a></li>
+			<li><a class="svn" href="common/error_check.html" target="_blank">오류페이지 - 정기 점검</a></li>
+			<li><a class="svn" href="common/error_check2.html" target="_blank">오류페이지 - 긴급 점검</a></li>
+			<li><a class="svn" href="common/error_refresh.html" target="_blank">오류페이지 - 연속적인 새로고침 오류</a></li>
+			<li><a class="svn" href="common/coupon_gift_error.html" target="_blank">오류페이지 - 쿠폰 선물하기</a></li>
+			<li><a class="svn" href="common/popup_password.html" target="_blank">비밀번호 변경 캠페인 팝업</a> <a class="lnk" href="https://member.ssg.com/member/popup/popupPwdChngCamp.ssg">운영</a></li>
+			<li><a class="svn" href="common/popup_qna_write.html" target="_blank">상품 Q&amp;A 쓰기 팝업</a></li>
+			<li><a class="svn" href="common/popup_report_error.html" target="_blank">상품제안 &amp; 오류신고 팝업</a></li>
+			<li><a class="svn" href="common/popup_search_eval.html" target="_blank">검색결과 만족도 확인 팝업</a></li>
+			<li><a class="svn" href="common/popup_search_request.html" target="_blank">이런 상품을 구해주세요 팝업</a></li>
+			<li><a class="svn" href="common/popup_thankcard.html" target="_blank">땡큐카드 서비스 이용안내 팝업</a></li>
+			<li><a class="svn" href="common/popup_delivery_tracking.html" target="_blank">협력업체용 배송조회 팝업</a></li>
+			<li class="needcheck"><a class="svn" href="common/SG-common-A-015-01.html" target="_blank">오류페이지 - 404</a></li>
+			<li class="needcheck"><a class="svn" href="common/404_ssg.html" target="_blank">오류페이지 - 404</a></li>
+			<li class="needcheck"><a class="svn" href="common/404_sfc.html" target="_blank">오류페이지 - 404(SFC)</a></li>
+			<li class="needcheck"><a class="svn" href="common/404_sfc_em.html" target="_blank">오류페이지 - 404(SFC 이몰)</a></li>
+			<li class="needcheck"><a class="svn" href="common/SG-common-A-015-02.html" target="_blank">오류페이지 - 일시적 장애</a></li>
+			<li class="needcheck"><a class="svn" href="common/500.html" target="_blank">오류페이지 - 일시적 장애</a></li>
+			<li class="needcheck"><a class="svn" href="common/error.html" target="_blank">오류페이지 - 방문자 폭주 접속 지연</a></li>
+			<li class="needcheck"><a class="svn" href="common/SG-common-A-015-03.html" target="_blank">오류페이지 - 시스템 점검안내</a></li>
+			<li class="needcheck"><a class="svn" href="common/SG-common-A-020-01.html" target="_blank">오류페이지 - 이메일 수신거부 오류</a></li>
+			<li class="needcheck"><a class="svn" href="common/SG-common-A-020-02.html" target="_blank">오류페이지 - 이메일 수신거부 신청</a></li>
+			<li class="needcheck"><a class="svn" href="common/SG-common-A-020-03.html" target="_blank">오류페이지 - 이메일 수신거부 완료</a></li>
+			<li class="needcheck"><a class="svn" href="common/SG-order-B-003-06.html" target="_blank">이용약관 - 전자금융거래 이용약관 팝업</a></li>
+			<li class="needcheck"><a class="svn" href="common/SG-order-B-003-07.html" target="_blank">이용약관 - 고유식별정보 수집 이용동의 팝업</a></li>
+			<li class="needcheck"><a class="svn" href="common/SG-order-B-003-08.html" target="_blank">이용약관 - 개인정보 수집 및 이용동의 팝업</a></li>
+			<li class="needcheck"><a class="svn" href="common/SG-order-B-003-09.html" target="_blank">이용약관 - 개인정보 제3자 제공 및 위탁 안내 팝업</a></li>
+			<li class="needcheck"><a class="svn" href="common/ssg_guide_page.html" target="_blank">SSG 쇼핑가이드</a></li>
+			<li class="needcheck"><a class="svn" href="common/ssg_guide.html" target="_blank">SSG 쇼핑가이드 팝업</a></li>
+		</ul>
+
+		<h2 class="sec_h">로그인</h2>
+		<ul>
+			<li><a class="svn" href="login/CM-common-A-004-01.html" target="_blank">일반 로그인</a></li>
+			<li><a class="svn" href="login/CM-common-A-004-04.html" target="_blank">일반 로그인 팝업</a></li>
+			<li><a class="svn" href="login/CM-common-A-006-01.html" target="_blank">비회원 로그인</a></li>
+			<li><a class="svn" href="login/CM-common-A-006-02.html" target="_blank">비회원 로그인 팝업</a></li>
+			<li><a class="svn" href="login/find_id_pwd.html" target="_blank">아이디/비번찾기</a></li>
+			<li><a class="svn" href="login/CM-common-A-007-03.html" target="_blank">아이디/비번찾기 완료</a></li>
+			<li><a class="svn" href="login/CM-common-A-007-04.html" target="_blank">아이디/비번찾기 재설정</a></li>
+			<li><a class="svn" href="login/CM-common-A-007-05.html" target="_blank">개인정보 이용내역확인 로그인전</a></li>
+			<li><a class="svn" href="login/CM-common-A-007-06.html" target="_blank">개인정보 이용내역확인 로그인후</a></li>
+			<li><a class="svn" href="login/CM-common-A-008-02.html" target="_blank">19금 성인인증</a></li>
+			<li><a class="svn" href="login/CM-common-A-008-01.html" target="_blank">19금 성인인증 팝업</a></li>
+			<li><a class="svn" href="login/CM-common-ad_accept.html" target="_blank">광고성 정보 수신동의 내역 확인</a></li>
+		</ul>
+
+		<h2 class="sec_h">회원가입</h2>
+		<ul>
+			<li><a class="svn" href="member/CM-member-intro.html" target="_blank">회원가입 - 인트로</a></li>
+			<li><a class="svn" href="member/CM-member-total_join1.html" target="_blank">통합회원 - 본인인증</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-02.html" target="_blank">통합회원 - 약관/개인정보동의</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-04.html" target="_blank">통합회원 - 정보입력</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-05.html" target="_blank">통합회원 - 가입완료</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-06.html" target="_blank">통합회원 - 통합회원 기가입안내</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-07.html" target="_blank">통합회원 - 신세계포인트 기가입안내</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-14.html" target="_blank">통합회원 - 통합회원 가입(전환) 안내</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-15.html" target="_blank">통합회원 - 전환 기가입안내</a></li>
+			<li><a class="svn" href="member/CM-member-restore.html" target="_blank">통합회원 - 휴면 계정 복원</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-08.html" target="_blank">아이디 중복확인 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-09.html" target="_blank">스포츠 빅텐 클럽 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-10.html" target="_blank">맘키즈 클럽 안내 팝업</a></li>
+			<li class="needcheck"><a class="svn" href="member/CM-member-A-001-11.html" target="_blank">포인트기가입 - 약관동의</a></li>
+			<li class="needcheck"><a class="svn" href="member/CM-member-A-001-12.html" target="_blank">포인트기가입 - 개인정보동의</a></li>
+			<li class="needcheck"><a class="svn" href="member/CM-member-A-001-13.html" target="_blank">포인트기가입 - 정보입력</a></li>
+			<li><a class="svn" href="member/CM-member-A-002-01.html" target="_blank">외국인회원 - 본인인증</a></li>
+			<li><a class="svn" href="member/CM-member-A-002-04.html" target="_blank">외국인회원 - 정보입력</a></li>
+			<li><a class="svn" href="member/CM-member-A-002-05.html" target="_blank">외국인회원 - 가입완료</a></li>
+			<li><a class="svn" href="member/CM-member-email_join1.html" target="_blank">간편가입회원 - 간편인증</a></li>
+			<li><a class="svn" href="member/CM-member-A-004-03.html" target="_blank">간편가입회원 - 정보입력</a></li>
+			<li><a class="svn" href="member/CM-member-A-004-04.html" target="_blank">간편가입회원 - 가입완료</a></li>
+			<li><a class="svn" href="member/CM-member-company_join1.html" target="_blank">법인회원 - 본인인증</a></li>
+			<li><a class="svn" href="member/CM-member-A-003-04.html" target="_blank">법인회원 - 정보입력</a></li>
+			<li><a class="svn" href="member/CM-member-A-003-05.html" target="_blank">법인회원 - 가입완료</a></li>
+			<li><a class="svn" href="member/CM-member-A-004-05.html" target="_blank">포인트전환회원 - 본인인증</a></li>
+			<li><a class="svn" href="member/CM-member-A-004-06.html" target="_blank">포인트전환회원 - 약관/개인정보동의</a></li>
+			<li><a class="svn" href="member/CM-member-A-004-07.html" target="_blank">포인트전환회원 - 정보입력</a></li>
+			<li><a class="svn" href="member/CM-member-A-004-08.html" target="_blank">포인트전환회원 - 가입완료</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-16.html" target="_blank">포인트전환회원 - 전환동의</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-17.html" target="_blank">포인트전환회원 - 전환완료</a></li>
+			<li><a class="svn" href="member/CM-member-A-007-04.html" target="_blank">페이스북회원 - 정보입력 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-007-08.html" target="_blank">페이스북회원 - SSG 회원 확인 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-007-06.html" target="_blank">페이스북회원 - 페이스북 계정 변경 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-007-07.html" target="_blank">페이스북회원 - 페이스북 연동 완료 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-007-05.html" target="_blank">페이스북회원 - 가입완료 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-b2e_join1.html" target="_blank">임직원몰(B2E몰) 회원 - 본인인증</a></li>
+			<li><a class="svn" href="member/CM-member-A-005-01.html" target="_blank">신규B2E - B2E/임직원 인증</a> <a class="lnk" href="https://member.ssg.com/member/join/b2eMbrConfirm.ssg" target="_blank">운영</a></li>
+			<li><a class="svn" href="member/CM-member-A-005-04.html" target="_blank">신규B2E - 이미 가입된 B2E 회원 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-005-05.html" target="_blank">신규B2E - SSG/신세계포인트 회원정보 통합안내</a></li>
+			<li><a class="svn" href="member/CM-member-A-005-06.html" target="_blank">신규B2E - SSG/신세계포인트 회원가입 안내</a></li>
+			<li><a class="svn" href="member/CM-common-A-005-01.html" target="_blank">기존B2E - 신세계몰 B2E 기존 고객사별 로그인</a></li>
+			<li><a class="svn" href="member/CM-common-A-005-02.html" target="_blank">기존B2E - 이마트몰 B2E 기존 고객사별 로그인</a></li>
+			<li><a class="svn" href="member/CM-common-A-005-03.html" target="_blank">기존B2E - 이마트몰 B2E 기존 고객사별 로그인 - 비번찾기 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-041-01.html" target="_blank">SFC 회원가입 신몰 - 본인인증</a></li>
+			<li><a class="svn" href="member/CM-member-A-041-03.html" target="_blank">SFC 회원가입 신몰 - 약관동의</a></li>
+			<li><a class="svn" href="member/CM-member-A-041-04.html" target="_blank">SFC 회원가입 신몰 - 정보입력</a></li>
+			<li><a class="svn" href="member/CM-member-A-041-06.html" target="_blank">SFC 회원가입 신몰 - 아이디 중복확인 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-041-07-02.html" target="_blank">SFC 회원가입 신몰 - 우편번호 찾기 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-041-05.html" target="_blank">SFC 회원가입 신몰 - 가입완료</a></li>
+			<li><a class="svn" href="member/CM-member-A-041-08.html" target="_blank">SFC 회원가입 이몰 - 약관동의/정보입력</a></li>
+			<li><a class="svn" href="member/CM-member-A-041-09.html" target="_blank">SFC 회원가입 이몰 - 아이디 중복확인 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-041-10.html" target="_blank">SFC 회원가입 이몰 - 우편번호 찾기 팝업</a></li>
+			<li><a class="svn" href="member/CM-member-A-041-11.html" target="_blank">SFC 회원가입 이몰 - 가입완료</a></li>
+			<li><a class="svn" href="member/CM-sfcmember-restore.html" target="_blank">SFC - 휴면 계정 복원</a></li>
+			<li><a class="svn" href="member/CM-member-nkg.html" target="_blank">임직원몰(넥슨컴퍼니) - 인트로</a> <a class="lnk" href="https://member.ssg.com/b2e/nkg" target="_blank">운영</a></li>
+			<li><a class="svn" href="member/CM-member-sclub.html" target="_blank">S-Club - 인트로</a></li>
+			<li><a class="svn" href="member/CM-member-sclub_join.html" target="_blank">S-Club - 본인인증</a></li>
+			<li><a class="svn" href="member/CM-member-A-001-06_v.html" target="_blank">S-Club - 통합회원 기가입안내</a></li>
+		</ul>
+
+		<h2 class="sec_h">고객센터</h2>
+		<ul>
+			<li><a class="svn" href="cs/CM-cs-A-001-01.html" target="_blank">메인</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-001-01-01.html" target="_blank">메인(SFC)</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-001-03.html" target="_blank">고객센터 이용안내(ARS)(신세계몰) 팝업</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-001-04.html" target="_blank">고객센터 이용안내(ARS)(이마트몰) 팝업</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-001-05.html" target="_blank">고객센터 이용안내(ARS)(SSG) 팝업</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-001-07.html" target="_blank">공지사항</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-002-01.html" target="_blank">FAQ</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-002-02.html" target="_blank">FAQ - 검색</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-cs-A-003-01.html" target="_blank">1:1 답변확인</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-cs-A-003-03.html" target="_blank">1:1 답변확인 - 보기</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-003-02.html" target="_blank">1:1이메일상담(회원)</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-cs-A-003-04.html" target="_blank">1:1이메일상담(비회원)</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-003-05.html" target="_blank">1:1이메일상담(문의도움말)</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-003-05_popup.html" target="_blank">1:1이메일상담 - 파일첨부 팝업</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-003-06.html" target="_blank">1:1이메일상담 - 주문상품 선택 팝업</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-003-09.html" target="_blank">1:1이메일상담 - 장바구니 상품 선택 팝업</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-003-08.html" target="_blank">1:1이메일상담 - MY클립 선택 팝업</a></li>
+			<li><a class="svn" href="cs/CM-cs-A-003-07.html" target="_blank">1:1이메일상담 - 상담원 지정하기 팝업</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-cs-A-004-01.html" target="_blank">실시간 채팅상담</a></li>
+			<li class="needcheck"><a class="svn" href="cs/CM-cs-A-004-02.html" target="_blank">채팅상담 시간종료 팝업</a></li>
+
+			<li><a class="svn" href="guide/CM-cs-A-006-01.html" target="_blank">배송 서비스 - 배송형태별 안내</a></li>
+			<li class="needcheck"><a class="svn" href="guide/CM-cs-A-006-02.html" target="_blank">배송 서비스 - 이마트상품 배송비 PAYBACK</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-03.html" target="_blank">배송 서비스 - 해외배송 안내</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-04.html" target="_blank">주문결제 서비스 - 제휴카드 혜택</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-05.html" target="_blank">주문결제 서비스 - 결제 오류 안내(ACTIVE X)</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-06.html" target="_blank">주문결제 서비스 - 결제 오류 안내(안심클릭)</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-07.html" target="_blank">주문결제 서비스 - 결제 오류 안내(안심결제)</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-08.html" target="_blank">주문결제 서비스 - 유비페이</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-12.html" target="_blank">주문결제 서비스 - 해외결제</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-13.html" target="_blank">주문결제 서비스 - 신세계 상품권 결제</a></li>
+			<li class="needcheck"><a class="svn" href="guide/CM-cs-A-006-09.html" target="_blank">신규 서비스 - 플코</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-10.html" target="_blank">신규 서비스 - 클립</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-14.html" target="_blank">신규 서비스 - 선물서비스</a></li>
+			<li><a class="svn" href="guide/CM-cs-A-006-11.html" target="_blank">모바일 서비스</a></li>
+			<li class="needcheck"><a class="svn" href="guide/CM-member-A-024-01.html" target="_blank">임직원 혜택 안내</a></li>
+		</ul>
+
+		<h2 class="sec_h">시스템 이메일</h2>
+		<ul>
+			<li><a class="svn" href="ems/CM-mail-A-001-01.html" target="_blank">회원가입 축하메일</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-001-02.html" target="_blank">회원가입 인증메일(SSG단독회원)</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-001-03.html" target="_blank">비번찾기 인증메일</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-001-04.html" target="_blank">비번찾기 인증메일(이몰B2E)</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-003-01.html" target="_blank">정상주문취소</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-003-01_SFC_E.html" target="_blank">정상주문취소 - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-003-01_SFC_S.html" target="_blank">정상주문취소 - 임직원</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-003-02.html" target="_blank">미입금주문취소</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-003-02_SFC_E.html" target="_blank">미입금주문취소 - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-003-02_SFC_S.html" target="_blank">미입금주문취소 - 임직원</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-004-01.html" target="_blank">교환요청</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-004-01_SFC_E.html" target="_blank">교환요청 - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-004-01_SFC_S.html" target="_blank">교환요청 - 임직원</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-004-02.html" target="_blank">교환접수</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-004-02_SFC_E.html" target="_blank">교환접수 - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-004-02_SFC_S.html" target="_blank">교환접수 - 임직원</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-005-01.html" target="_blank">반품요청</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-005-01_SFC_E.html" target="_blank">반품요청 - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-005-01_SFC_S.html" target="_blank">반품요청 - 임직원</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-005-02.html" target="_blank">반품접수</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-005-02_SFC_E.html" target="_blank">반품접수 - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-005-02_SFC_S.html" target="_blank">반품접수 - 임직원</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-005-04.html" target="_blank">반품완료</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-005-04_SFC_E.html" target="_blank">반품완료 - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-005-04_SFC_S.html" target="_blank">반품완료 - 임직원</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-001-01.html" target="_blank">쿠폰 - 첫구매 혜택</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-002-01.html" target="_blank">쿠폰 - 고객 등급 VIP</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-002-02.html" target="_blank">쿠폰 - 고객 등급 골드</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-002-03.html" target="_blank">쿠폰 - 고객 등급 실버</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-002-04.html" target="_blank">쿠폰 - 고객 등급 브론즈</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-002-05.html" target="_blank">쿠폰 - 고객 등급 패밀리</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-006-01.html" target="_blank">클립 - 일주일간 히트상품</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-006-02.html" target="_blank">클립 - 관심 카테고리 새상품</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-006-03.html" target="_blank">클립 - 관심 카테고리 비슷한 상품</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-006-05.html" target="_blank">클립 - BEST10</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-008-01.html" target="_blank">쿠폰 - 생일쿠폰</a></li>
+			<li><a class="svn" href="ems/CM-mail-CRM-010-01.html" target="_blank">자주 구매 상품</a></li>
+			<li><a class="svn" href="ems/CM-mail-mkt-001-02.html" target="_blank">몰 발송 매일 - 신세계 몰</a></li>
+			<li><a class="svn" href="ems/CM-mail-mkt-001-03.html" target="_blank">몰 발송 매일 - 이마트 몰</a></li>
+			<li><a class="svn" href="ems/CM-cs-A-009-02.html" target="_blank">문의답변메일</a></li>
+			<li><a class="svn" href="ems/CM-cs-A-009-02_SFC_E.html" target="_blank">문의답변메일 - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-cs-A-009-02_SFC_S.html" target="_blank">문의답변메일 - 임직원</a></li>
+			<li><a class="svn" href="ems/CM-mail-CS10118.html" target="_blank">상담메일발송폼</a></li>
+			<li><a class="svn" href="ems/CM-mail-CS10118_SFC_E.html" target="_blank">상담메일발송폼 - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-CS10118_SFC_S.html" target="_blank">상담메일발송폼 - 임직원</a></li>
+			<li><a class="svn" href="ems/CS_mail_01_SFC_E.html" target="_blank">임시비밀번호 발급 - 이마트</a></li>
+			<li><a class="svn" href="ems/CS_mail_01_SFC_S.html" target="_blank">임시비밀번호 발급 - 임직원</a></li>
+			<li><a class="svn" href="ems/CS_mail_01.html" target="_blank">임시비밀번호 발급</a></li>
+			<li><a class="svn" href="ems/CS31003.html" target="_blank">대외기관 민원관리</a></li>
+			<li><a class="svn" href="ems/CS31003_SFC_E.html" target="_blank">대외기관 민원관리 - 이마트</a></li>
+			<li><a class="svn" href="ems/CS31003_SFC_S.html" target="_blank">대외기관 민원관리 - 임직원</a></li>
+			<li><a class="svn" href="ems/CS_email_02_1.html" target="_blank">고객정보최신화 캠페인(SSG)</a></li>
+			<li><a class="svn" href="ems/CS_email_02_2.html" target="_blank">고객정보최신화 캠페인(SFC)</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-002-01.html" target="_blank">주문완료(결제완료)</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-002-01_SFC_E.html" target="_blank">주문완료(결제완료) - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-002-01_SFC_S.html" target="_blank">주문완료(결제완료) - 임직원</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-002-01_mocha.html" target="_blank">주문완료(모카페이)</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-002-01_mocha_SFC_E.html" target="_blank">주문완료(모카페이) - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-002-01_mocha_SFC_S.html" target="_blank">주문완료(모카페이) - 임직원</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-002-01_deposit.html" target="_blank">주문완료(무통장입금)</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-002-01_deposit_SFC_E.html" target="_blank">주문완료(무통장입금 - 이마트</a></li>
+			<li><a class="svn" href="ems/CM-mail-A-002-01_deposit_SFC_S.html" target="_blank">주문완료(무통장입금 - 임직원</a></li>
+			<li><a class="svn" href="ems/PD_email_01.html" target="_blank">출고완료(상품 발송 완료)</a></li>
+			<li><a class="svn" href="ems/PD_email_01_SFC_E.html" target="_blank">출고완료(상품 발송 완료) - 이마트</a></li>
+			<li><a class="svn" href="ems/PD_email_01_SFC_S.html" target="_blank">출고완료(상품 발송 완료) - 임직원</a></li>
+			<li><a class="svn" href="ems/em_5m_emall_01.html" target="_blank">오반장</a></li>
+			<li><a class="svn" href="ems/em_mkt_email_01.html" target="_blank">이마트 몰 - 주간 베스트 8 CASE 1</a></li>
+			<li><a class="svn" href="ems/em_mkt_email_02.html" target="_blank">이마트 몰 - 주간 베스트 8 CASE 2</a></li>
+			<li><a class="svn" href="ems/em_mkt_email_03.html" target="_blank">이마트 몰 - 주간 베스트 8 CASE 3</a></li>
+			<li><a class="svn" href="ems/em_mkt_email_04.html" target="_blank">이마트 몰 - 주간 베스트 8 CASE 4</a></li>
+			<li><a class="svn" href="ems/NT_email_01.html" target="_blank">이벤트 - 경품당첨</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_03.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 1</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_04.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 2</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_05.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 3</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_06.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 4</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_07.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 5</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_08.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 6</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_09.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 7</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_11.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 8</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_11.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 9</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_12.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 10</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_13.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 11</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_14.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 12</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_15.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 13</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_16.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 14</a></li>
+			<li><a class="svn" href="ems/ssgm_mkt_email_17.html" target="_blank">신세계 몰 - 주간 베스트 8 CASE 15</a></li>
+		</ul>
+	</div>
+</div>
+<div id="svn_view">
+
+
+	<iframe src="about:blank" frameborder="0" name="ifr" id="ifr"></iframe>
+</div>
+<div class="skip_nav">
+	<div class="skip_nav_pager"></div>
+	<ul>
+		<li><a href="#none" class="skip_p">↑</a></li>
+		<li><a href="#none" class="skip_n">↓</a></li>
+	</ul>
+	<a href="#none" class="skip_nav_opener">M</a>
+</div>
+<script type="text/javascript">
+    function init() {
+        var $listWrap = $('#ct ul'),
+            $list = $listWrap.find('>li');
+
+        $('a.svn, a.lnk').each(function() {
+            var link = $(' <span>/ </span>'),
+                href = $(this).attr('href');
+
+            $(this).append( link.append(href) );
+        });
+
+        $('a.svn, a.lnk').on('click', function(e) {
+            e.preventDefault();
+            $list.removeClass('on');
+            $(this).parent().addClass('on');
+            $('#svn_view iframe').attr('src', $(this).attr('href'));
+        });
+
+        $('a.svn, a.lnk').on('dblclick', function() {
+            window.open(this.href);
+        });
+
+        $(document).keydown(function(e) {
+            switch(e.which) {
+                case 37:
+                    break;
+                case 38:
+                    $list.eq( ($list.index($listWrap.find('.on'))) - 1 ).find('a.svn').trigger('click');
+                    break;
+                case 39:
+                    break;
+                case 40:
+                    $list.eq( ($list.index($listWrap.find('.on'))) + 1 ).find('a.svn').trigger('click');
+                    break;
+                default:
+                    return
+            }
+            e.preventDefault();
+        });
+    }
+
+    function skipNav() {
+        var $secH = $('.sec_h'),
+            $skipNav = $('.skip_nav'),
+            $btnPrev = $skipNav.find('.skip_p'),
+            $btnNext = $skipNav.find('.skip_n'),
+            $skipPagerWrap = $skipNav.find('.skip_nav_pager');
+            $btnOpener = $skipNav.find('.skip_nav_opener');
+
+        var arrTitTop = [],
+            posIndex;
+
+        function _initSkipNav() {
+            $secH.each(function(index) {
+                var $this = $(this);
+                arrTitTop.push( $this.offset().top );
+                $skipPagerWrap.append( $('<button type="button"><span>' + $this.html() + '</span></button>') );
+            });
+            _attachEvent();
+            _checkPos();
+        }
+
+        function _attachEvent() {
+            $btnPrev.on('click', function(e) {
+                e.preventDefault();
+                if (posIndex) {
+                    $(window).scrollTop( arrTitTop[--posIndex] );
+                }
+            });
+
+            $btnNext.on('click', function(e) {
+                e.preventDefault();
+                if (posIndex < arrTitTop.length-1) {
+                    $(window).scrollTop( arrTitTop[++posIndex] );
+                }
+            });
+
+            $skipPagerWrap.on('click', 'button', function() {
+                var $this = $(this);
+                posIndex = $this.index();
+                $(window).scrollTop( arrTitTop[ posIndex ] );
+            });
+
+            $(window).on('scroll', function () {
+                _checkPos();
+            });
+
+            $btnOpener.on('click', function() {
+                $skipPagerWrap.toggle();
+            })
+        }
+
+        function _checkPos() {
+            var windowTop = $(window).scrollTop(),
+                $skipPagerBtn = $skipPagerWrap.find('button');
+
+            $secH.each(function (index) {
+                var $this = $(this),
+                    $relatedLst = $this.next('ul');
+
+                if (windowTop < arrTitTop[index] + $this.height() + $relatedLst.height()) {
+                    posIndex = index;
+                    return false;
+                }
+            });
+
+            $skipPagerBtn.eq(posIndex).addClass('on').siblings().removeClass('on');
+        }
+
+        _initSkipNav();
+    }
+
+    /*
+    function initObj($obj) {
+        var link = $(' <span>/ </span>'),
+            href = $obj.attr('href');
+        $obj.append( link.append(href) );
+
+        $obj.on('click', function(e) {
+            e.preventDefault();
+            $("#svn_view iframe").attr("src", $(this).attr('href'));
+        });
+
+        $obj.on('dblclick', function() {
+            window.open(this.href);
+        });
+    }
+
+    // 동적으로 UI-SVN 리소스를 가져와 봅니다.
+
+    $(document).ready(function() {
+        $(".sec_h").each(function (index) {
+            if ($(this).data("svn_url")) {
+                addLiData($(this).data("svn_url"), $(this).next());
+            }
+        });
+    });
+
+    function addLiData(paramUrl, $targetEl) {
+        $.ajax({
+            type: "GET",
+            url: paramUrl,
+            dataType: "html",
+            async: false,
+            success: function(data) {
+                var $html = $("<html />").html(data);
+
+                $html.find("li").each(function (index) {
+                    var href = $(this).find("a").attr("href");
+                    if (href != "../") {
+                        var $liEl = $("<li><a class='svn' href='" + paramUrl + href + "' target='_blank'></a></li>");
+                        $targetEl.append($liEl);
+                        setTitle(paramUrl + $(this).find("a").attr("href"), $liEl);
+                    }
+                });
+            }
+        });
+    }
+
+    function setTitle(paramUrl, $targetEl) {
+        $.ajax({
+            type: "GET",
+            url: paramUrl,
+            dataType: "html",
+            async: false,
+            success: function(data) {
+                var $html = $("<html />").html(data);
+                var title = $html.find("title").eq(0).text();
+                var $aEl = $targetEl.find("a");
+                $aEl.text(title);
+                initObj($aEl);
+            }
+        });
+    }
+	*/
+</script>
+<!-- TODO 1. firebase SDK 링크 -->
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-messaging.js"></script>
+<script src="/fireinit.js"></script>
+<script type="text/javascript">
+
+function fb_edit(){
+	
+}
+
+
+function fb_set(fd,vtitle,vlink,vprod,vstate,el) {
+	var postData = {
+		link : $('#'+ vlink).val(),
+		prod : $('#'+ vprod).val(),
+		state : ($('#'+ vstate).val() == 'true') ? true:false,
+		date : new Date().getTime()
+	};
+	if ($('#'+ vtitle).val() == '' ){
+		alert('타이틀?');
+		$('#'+ vtitle).focus();
+		return false;
+	}else if ($('#'+ vlink).val() == ''){
+		alert('SVN 링크?');
+		$('#'+ vlink).focus();
+		return false;
+	}else{
+		var newPostKey = firebase.database().ref().child('posts').push().key;
+
+		var updates = {};
+		updates['/SSG_PC/'+fd+'/'+ $('#'+ vtitle).val()] = postData;
+		
+		var prod_link = '';
+		var li_state = '';
+		var li_tag = "";
+
+		if (postData.state == true){
+			li_state = '';
+		}else{
+			li_state = ' class="needcheck"';
+		}
+		
+		if (postData.prod != undefined && postData.prod != ''){
+			prod_link = '<a href="'+postData.prod+'" class="lnk" target="_blank">운영<span>'+postData.prod+'</span></a>';
+		}else{
+			prod_link = '';
+		}
+
+		var li_tag = '<li'+li_state+'><a class="svn" href="'+postData.link+'" target="ifr">'+ $('#'+ vtitle).val() +'<span>'+postData.link+'</span></a>'+prod_link+'<div class="btn_area"><button class="btn_del" data-key="'+fd+'" data-key1="'+$('#'+ vtitle).val()+'">X</button><button class="btn_edit">O</button></div></li>';
+
+		$(el).parent().prev().prev('ul').append(li_tag);
+		$('#'+ vlink).val('');
+		$('#'+ vprod).val('');
+		$('#'+ vtitle).val('').focus();
+		return firebase.database().ref().update(updates);
+	}
+}
+
+firebase.database().ref('/SSG_PC').on("child_added", function(snapshot) {
+	var h2_tag = '<h2 class="sec_h">'+snapshot.key+'</h2>';
+	var div_add = '<div class="add_list">'+
+		'<input placeholder="타이틀" id="ip1_'+snapshot.key+'" />'+
+		'<input placeholder="SVN 링크" id="ip2_'+snapshot.key+'" />'+
+		'<input placeholder="운영 링크" id="ip3_'+snapshot.key+'" />'+
+		'<select id="sel1_'+snapshot.key+'">'+
+			'<option value="true" checked="checked">노출</option>'+
+			'<option value="flase">체크</option>'+
+		'</select>'+
+		'<button type="submit" onclick="fb_set(\''+snapshot.key+'\',\'ip1_'+snapshot.key+'\',\'ip2_'+snapshot.key+'\',\'ip3_'+snapshot.key+'\',\'sel1_'+snapshot.key+'\',this)">추가</button>'+
+		'</div>';
+	var li_tag = '';
+	var prod_link = '';
+	var li_state = '';
+	firebase.database().ref('/SSG_PC/'+snapshot.key).orderByChild("date").on("child_added", function(snapshot1) {
+
+		if (snapshot1.val().prod != undefined && snapshot1.val().prod != ''){
+			prod_link = '<a href="'+snapshot1.val().prod+'" class="lnk" target="_blank">운영<span>'+snapshot1.val().prod+'</span></a>';
+		}else{
+			prod_link = '';
+		}
+
+		if (snapshot1.val().state == true){
+			li_state = '';
+		}else{
+			li_state = ' class="needcheck"';
+		}
+		li_tag += '<li'+li_state+'><a class="svn" href="'+snapshot1.val().link+'" target="ifr">'+ snapshot1.key +'<span>'+snapshot1.val().link+'</span></a>'+prod_link+'<div class="btn_area"><button class="btn_del" data-key="'+snapshot.key+'" data-key1="'+snapshot1.key+'">X</button><button class="btn_edit">O</button></div></li>';
+	});
+	var ul_tag = '<ul class="edit_active">'+li_tag+'</ul><button class="add_li">+</button>';
+	$('#nav').append(h2_tag + ul_tag + div_add );
+});
+
+
+$('body').on('click','.add_li',function() {
+	$(this).next('.add_list').toggle();
+});
+
+$('body').on('click','.btn_del',function(){
+	var _this = $(this);
+	var _key = _this.data("key");
+	var _key1 = _this.data("key1");
+	var r = confirm('"'+_key + '/' +_key1 +'" 리스트를\n삭제 합니까?');
+	if (r == true) {
+			firebase.database().ref('/SSG_PC/'+_key+'/').child(_key1).remove().then(function() {
+				_this.parent().parent().remove();
+			}).catch(function(error) {
+				alert('error');
+			});
+	} else {
+		return false;
+	}
+});
+	
+
+  </script>
+</body>
+</html>

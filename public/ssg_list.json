@@ -1,0 +1,50 @@
+{
+  "SSG_PC": {
+    "공통 레이아웃": [
+      {
+        "title": "상품유닛",
+        "link": "guide_common_unit.html",
+        "prod": null,
+        "state": true
+      },
+      {
+        "title": "GNB/스카이/푸터",
+        "link": "common/CM-common-A-001-01.html",
+        "prod": null,
+        "state": true
+      },
+      {
+        "title": "각 몰용 GNB",
+        "link": "common/CM-common-A-001-01_02.html",
+        "prod": null,
+        "state": true
+      },
+      {
+        "title": "카테고리 네비게이션",
+        "link": "common/CM-common-A-001-02-AU.html",
+        "prod": null,
+        "state": true
+      },
+      {
+        "title": "로케이션",
+        "link": "common/CM-common-A-001-03.html",
+        "prod": null,
+        "state": true
+      }
+    ],
+    "메인": [
+      {
+        "title": "메인",
+        "link": "main/SG-display-A-001-01.html",
+        "prod": "www.ssg.com/main.ssg",
+        "state": true
+      },
+      {
+        "title": "메인2",
+        "link": "main/SG-display-A-001-01.html",
+        "prod": "www.ssg.com/main.ssg",
+        "state": false
+      }
+    ]
+  }
+}
