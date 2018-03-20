@@ -274,12 +274,11 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 
 #svn_view{position:fixed;z-index:100;top:56px;right:0;left:0;bottom:0;margin:0;padding:0;background-color:#FFF;}
 #svn_view iframe{width:100%;height:100%;overflow-y:scroll}
-#svn_view.m_portrait{width:375px;height:667px;left:50%;top:40px;margin-left:-188px;overflow:hidden;outline:10px solid #495057}
-#svn_view.m_portrait iframe{width:391px}
+#svn_view.m_portrait{width:375px;height:667px;left:50%;top:50%;margin-left:-188px;margin-top:-333px;outline:10px solid #495057}
+#svn_view.m_portrait iframe{width:100%}
 
-#svn_view.m_landscape{width:667px;height:375px;left:50%;top:40px;margin-left:-188px;overflow:hidden;outline:10px solid #495057}
-#svn_view.m_landscape iframe{width:683px}
-#btnRotate{position:absolute;top:0;left:50%;margin-left:-198px}
+#svn_view.m_landscape{width:667px;height:375px;left:50%;top:50%;margin-left:-188px;margin-top:-187px;outline:10px solid #495057}
+#btnRotate{position:absolute;top:-40px;right:-10px;}
 
 /*#svn_view iframe.m_portrait{width:375px;height:667px;position:absolute;left:50%;margin-left:-188px;outline:10px solid #343A40;top:10px}
 #svn_view iframe.m_landscape{height:375px;width:667px;margin:0 auto}*/
@@ -483,4 +482,7 @@ li.sortable-placeholder {
 .navbar-collapse .select2-container--default .select2-selection--single .select2-selection__rendered{height:2rem;line-height:2rem}
 .navbar-collapse .select2-container--default .select2-selection--single .select2-selection__arrow{height:2rem;}
 .btn_login,.btn_logout{display:none !important}
+.location{display:none !important}
+.btn_location{display:none !important}
+#toTop{display:none !important}
 }

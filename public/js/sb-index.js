@@ -228,7 +228,6 @@ $('body').on('click','.add_li',function() {
 	}else{
 		$('#ifr').attr('src', $(this).attr('href'));
 	}
-	$('#infoHttps').css('zIndex','-1');
 	$('.fd_li').removeClass('atv');
 	$(this).parent().addClass('atv');
 });
