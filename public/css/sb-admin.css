@@ -486,3 +486,39 @@ li.sortable-placeholder {
 .btn_location{display:none !important}
 #toTop{display:none !important}
 }
+
+.tooltip-inner{text-align:left;font-size:12px}
+
+.custom_menu {z-index:1050;position: absolute;background-color:rgba(255,255,255,.8);border: 1px solid #333;padding:0 4px;color:#333;font-size:12px;line-height:21px;border-radius:3px}
+
+.custom_menu[class^="mng_1"]:after{content:'황성철P'}
+
+.custom_menu[class^="mng_15"]:after,
+.custom_menu[class^="mng_16"]:after,
+.custom_menu[class^="mng_17"]:after,
+.custom_menu[class^="mng_21"]:after,
+.custom_menu[class^="mng_22"]:after,
+.custom_menu[class^="mng_23"]:after,
+.custom_menu.mng_etc:after{content:'☎ 황성철P'}
+
+.custom_menu[class^="mng_2"]:after,
+.custom_menu[class^="mng_3"]:after,
+.custom_menu[class^="mng_4"]:after,
+.custom_menu[class^="mng_10"]:after,
+.custom_menu[class^="mng_18"]:after,
+.custom_menu[class^="mng_19"]:after{content:'김희창P'}
+
+.custom_menu[class^="mng_5"]:after,
+.custom_menu[class^="mng_6"]:after,
+.custom_menu[class^="mng_7"]:after,
+.custom_menu[class^="mng_8"]:after,
+.custom_menu[class^="mng_9"]:after,
+.custom_menu[class^="mng_11"]:after{content:'배정연P'}
+
+.custom_menu[class^="mng_12"]:after,
+.custom_menu[class^="mng_13"]:after,
+.custom_menu[class^="mng_14"]:after{content:'함다현P'}
+,
+
+.custom_menu[class^="mng_20"]:after{content:'김재호P'}
+

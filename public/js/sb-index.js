@@ -132,7 +132,7 @@ function callList(){
 			var descTit = (snapshot1.val().desc == undefined) ? '' : snapshot1.val().desc;
 			var websvnUrl = (websvn ==  undefined) ? '' : websvn.replace('/ssgui/','/websvn/log.php?repname=S.com+UI+Repository&path=/');
 			if (snapshot1.key != 'temp'){
-				li_tag += '<li class="fd_li column '+li_state+'" data-num="'+snapshot1.val().date+'"><i class="fa'+li_ico+' handle"></i> <a class="svn" href="'+snapshot1.val().link+'" target="ifr" title="'+descTit+'" data-toggle="tooltip">'+ snapshot1.key +'<span class="link">'+snapshot1.val().link+'</span></a><span class="util_btn"><i class="fa fa-external-link"></i><a class="fa fa-code" target="websvn" href="'+websvnUrl+'"></a></span><div class="btn_area"><button data-key="'+snapshot.key+'" data-key1="'+snapshot1.key+'" class="btn_del fa fa-trash"></button><button data-key="'+snapshot.key+'" data-key1="'+snapshot1.key+'" class="btn_edit fa fa-pencil-square-o"></button></div><div class="btn_area2"><button data-key="'+snapshot.key+'" data-key1="'+snapshot1.key+'" class="btn_done fa fa-check"></button></div>'
+				li_tag += '<li class="fd_li column '+li_state+'" data-sep="'+snapshot1.val().sep+'" data-num="'+snapshot1.val().date+'"><i class="fa'+li_ico+' handle"></i> <a class="svn" href="'+snapshot1.val().link+'" target="ifr" title="'+descTit+'" data-toggle="tooltip">'+ snapshot1.key +'<span class="link">'+snapshot1.val().link+'</span></a><span class="util_btn"><i class="fa fa-external-link"></i><a class="fa fa-code" target="websvn" href="'+websvnUrl+'"></a></span><div class="btn_area"><button data-key="'+snapshot.key+'" data-key1="'+snapshot1.key+'" class="btn_del fa fa-trash"></button><button data-key="'+snapshot.key+'" data-key1="'+snapshot1.key+'" class="btn_edit fa fa-pencil-square-o"></button></div><div class="btn_area2"><button data-key="'+snapshot.key+'" data-key1="'+snapshot1.key+'" class="btn_done fa fa-check"></button></div>'
 
 				+'<div class="edit_form">'
 				+'<input type="checkbox" class="chk" id="'+snapshot1.val().date+'_chk" checked="checked">'
@@ -220,24 +220,42 @@ function fnSet(e){
 	});
 }
 
+function bodyClose(el,at){
+	$(document).on('mouseup',function (e){
+		var container = $(el);
+		if( container.has(e.target).length === 0){
+			(at == 'remove') ? container.remove() : container.hide();
+		}
+	});
+}
+
 $('body').on('click','.add_li',function() {
 	$(this).next('.add_list').toggle();
 }).on('click','a.svn', function(e) {
-	if ($(this).parent().hasClass('atv') == true){
-		window.open($(this).attr('href'), 'index');
+	var $this = $(this);
+	if ($this.parent().hasClass('atv') == true){
+		window.open($this.attr('href'), 'index');
 	}else{
-		$('#ifr').attr('src', $(this).attr('href'));
+		$('#ifr').attr('src', $this.attr('href'));
 	}
 	$('.fd_li').removeClass('atv');
-	$(this).parent().addClass('atv');
+	$this.parent().addClass('atv');
+}).on('contextmenu','li.fd_li', function(e) { 
+	var $this = $(this);
+	if ($this.data('sep') != 'undefined'){
+		e.preventDefault();
+		$('<div id="customMenu" class="mng_'+$this.data('sep')+' custom_menu"></div>')
+			.appendTo('#mainNav')
+			.css({top: e.pageY + 'px', left: e.pageX + 20 + 'px'});
+		bodyClose('.custom_menu','remove');
+	}
+});
+$('#nav').on('scroll',function(){
+	$('.custom_menu').remove();
 });
 
 $('body').on('click','.sec_h > .fa',function() {
 	$(this).parent().next('.fd_ul').toggle();
-});
-
-$('body').on('click','.sec_h > span.tt',function() {
-	$('.fd_ul').hide();
 });
 
 $('body').on('click','.btn_del',function(){
